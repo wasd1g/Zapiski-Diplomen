@@ -8,7 +8,8 @@ export default class NotesView {
         this.root.innerHTML = '\
         <div class="notes_sidebar">\
         <button class="notes_add" type="button">Add New Note</button>\
-        <div class="notes_list"></div>\
+        <div class="notes_list">\
+        </div>\
         </div>\
         <div class="notes_preview">\
             <input type="text" class="notes_title" placeholder="New Note">\
@@ -33,6 +34,8 @@ export default class NotesView {
             })
         })
 
+        console.log(this._createListItemHTML(300, "New note", "Nov note!", new Date()));
+
         // Todo: hide the preview by default
     }
 
@@ -43,9 +46,39 @@ export default class NotesView {
         return '\
             <div class="notes_list-item" data-note-id="${id}">\
                 <div class="notes_small-title">${title}</div>\
-                <div class="notes_small-body">${body.substring(0, MAX_BODY_LENGTH)} ${body.length > MAX_BODY_LENGTH ? "..." : ""</div>\
+                <div class="notes_small-body">${body.substring(0, MAX_BODY_LENGTH)}\
+                ${body.length > MAX_BODY_LENGTH ? "..." : ""</div>\
                 <div class="notes_small-updated">${updated.toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })}</div>\
             </div>\
         ';
+    }
+
+    updateNotesList(notes) {
+        const notesListContainer = this.root.querySelector(".notes_list");
+
+        //Empty list
+        notesListContainer.innerHTML = "";
+
+        for (const note of notes) {
+            const html = this._createListItemHTML(note.id, note.title, note.body, new Date(note.updated));
+
+            notesListContainer.insertAdjacentHTML("beforeend", html);
+        }
+
+        // Add select/delete events for each list item
+
+        notesListContainer.querySelectorAll(".notes_list-item").forEach(noteListItem => {
+            noteListItem.addEventListener("click", () => {
+                this.onNoteSelect(noteListItem.dataset.noteId);
+            });
+
+            noteListItem.addEventListener("dblclick", () => {
+                const doDelete = confirm("Are you sure you want to delete this note?");
+
+                if (doDelete) {
+                    this.OnNoteDelete(noteListItem.dataset.noteId);
+                }
+            });
+        });
     }
 }
