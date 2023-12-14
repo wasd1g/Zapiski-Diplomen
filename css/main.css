@@ -51,7 +51,7 @@ body {
     cursor: pointer;
 }
 
-.notes_list-item--selected {
+.notes_list-item-selected {
     background: #eeeeee;
     border-radius: 7px;
     font-weight: 400;

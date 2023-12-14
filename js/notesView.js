@@ -5,17 +5,17 @@ export default class NotesView {
         this.onNoteAdd = onNoteAdd;
         this.onNoteEdit = onNoteEdit;
         this.OnNoteDelete = OnNoteDelete;
-        this.root.innerHTML = '\
-        <div class="notes_sidebar">\
-        <button class="notes_add" type="button">Add New Note</button>\
-        <div class="notes_list">\
-        </div>\
-        </div>\
-        <div class="notes_preview">\
-            <input type="text" class="notes_title" placeholder="New Note">\
-            <textarea class="notes_body">Take a note...</textarea>\
-        </div>\
-        ';
+        this.root.innerHTML = `
+        <div class="notes_sidebar">
+        <button class="notes_add" type="button">Add New Note</button>
+        <div class="notes_list">
+        </div>
+        </div>
+        <div class="notes_preview">
+            <input type="text" class="notes_title" placeholder="New Note">
+            <textarea class="notes_body">Take a note...</textarea>
+        </div>
+        `;
 
         const btnAddNote = this.root.querySelector(".notes_add");
         const inpTitle = this.root.querySelector(".notes_title");
@@ -36,21 +36,25 @@ export default class NotesView {
 
         console.log(this._createListItemHTML(300, "New note", "Nov note!", new Date()));
 
-        // Todo: hide the preview by default
+        this.updateNotePreviewVisibility(false);
     }
 
     // private method _
     _createListItemHTML (id, title, body, updated) {
         const MAX_BODY_LENGTH = 60;
 
-        return '\
-            <div class="notes_list-item" data-note-id="${id}">\
-                <div class="notes_small-title">${title}</div>\
-                <div class="notes_small-body">${body.substring(0, MAX_BODY_LENGTH)}\
-                ${body.length > MAX_BODY_LENGTH ? "..." : ""</div>\
-                <div class="notes_small-updated">${updated.toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })}</div>\
-            </div>\
-        ';
+        return `
+            <div class="notes_list-item" data-note-id="${id}">
+                <div class="notes_small-title">${title}</div>
+                    <div class="notes_small-body">
+                        ${body.substring(0, MAX_BODY_LENGTH)}
+                        ${body.length > MAX_BODY_LENGTH ? "..." : ""}
+                    </div>
+                    <div class="notes_small-updated">
+                        ${updated.toLocaleString(undefined, { dateStyle: "full", timeStyle: "short" })}
+                </div>
+             </div>
+                 `;
     }
 
     updateNotesList(notes) {
@@ -80,5 +84,20 @@ export default class NotesView {
                 }
             });
         });
+    }
+
+    updateActiveNote(note) {
+        this.root.querySelector(".notes_title").value = note.title;
+        this.root.querySelector(".notes_body").value = note.body;
+
+        this.root.querySelectorAll(".notes_list-item").forEach(noteListItem => {
+            noteListItem.classList.remove("notes_list-item-selected");
+        });
+
+        this.root.querySelector(`.notes_list-item[data-note-id="${note.id}"]`).classList.add("notes_list-item-selected");
+    }
+
+    updateNotePreviewVisibility(visible) {
+        this.root.querySelector(".notes_preview").style.visibility = visible ? "visible" : "hidden";
     }
 }
