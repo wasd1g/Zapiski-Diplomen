@@ -1,27 +1,4 @@
-import NotesView from "./notesView.js"
-import NotesAPI from "./notesAPI.js"
+import App from "./App.js";
 
-const app = document.getElementById("app");
-const view = new NotesView(app, {
-    onNoteAdd() {
-        console.log("Adding a new note!");
-        
-        
-    },
-    onNoteSelect(id) {
-        console.log("Note Selected: " + id)
-    },
-    OnNoteDelete(id) {
-        console.log("Note deleted!" + id);
-    }, 
-
-    onNoteEdit(newTitle, newBody) {
-        console.log(newTitle);
-        console.log(newBody);
-    },
-});
-
-const notes = NotesAPI.getAllNotes();
-
-view.updateNotesList(notes);
-view.updateActiveNote(notes[0]);
+const root = document.getElementById("app");
+const app = new App(root);
